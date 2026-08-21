@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "492238796759",
+    "project_id": "at2233",
+    "storage_bucket": "at2233.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:492238796759:android:0cd6028530fe1d657bbd92",
+        "android_client_info": {
+          "package_name": "com.example.mibolsillo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxL35HiVkqzSTMeK96hS8xDQOFbk1hsGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

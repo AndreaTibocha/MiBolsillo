@@ -1,25 +1,32 @@
 package com.example.mibolsillo;
 
 public class Movimiento {
-    private int id;
-    private String descripcion; // Sinónimo de concepto
-    private double valor;       // Sinónimo de monto
-    private String tipo;        // "Ingreso" o "Gasto"
+    private String id; // ID del documento de Firestore (necesario para editar y borrar)
+    private String titulo;
+    private double monto;
+    private String tipo; // "INGRESO" o "GASTO"
 
-    public Movimiento(int id, String descripcion, double valor, String tipo) {
+    // Constructor vacío obligatorio para que Firebase pueda mapear los datos
+    public Movimiento() {}
+
+    // Constructor completo
+    public Movimiento(String id, String titulo, double monto, String tipo) {
         this.id = id;
-        this.descripcion = descripcion;
-        this.valor = valor;
+        this.titulo = titulo;
+        this.monto = monto;
         this.tipo = tipo;
     }
 
     // Getters y Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-    public double getValor() { return valor; }
-    public void setValor(double valor) { this.valor = valor; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getTitulo() { return titulo; }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
+
+    public double getMonto() { return monto; }
+    public void setMonto(double monto) { this.monto = monto; }
+
     public String getTipo() { return tipo; }
     public void setTipo(String tipo) { this.tipo = tipo; }
 }

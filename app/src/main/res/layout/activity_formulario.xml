@@ -1,66 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp"
-    android:background="#FFFFFF">
+    android:padding="20dp">
 
     <TextView
-        android:id="@+id/lblTitulo"
+        android:id="@+id/tvTituloFormulario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nuevo Movimiento"
-        android:textSize="24sp"
+        android:text="Registro de Finanzas"
+        android:textSize="22sp"
         android:textStyle="bold"
-        android:textColor="#1A365D"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="20dp" />
 
-    <EditText
-        android:id="@+id/etDescripcion"
+    <!-- Campo Título -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilTitulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Descripción (ej. Almuerzo)"
-        android:inputType="text"
-        android:layout_marginBottom="16dp" />
+        android:hint="Título o Descripción"
+        app:errorEnabled="true"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-    <EditText
-        android:id="@+id/etValor"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Campo Monto -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilMonto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Valor ($)"
-        android:inputType="numberDecimal"
-        android:layout_marginBottom="16dp" />
+        android:hint="Monto ($)"
+        android:layout_marginTop="8dp"
+        app:errorEnabled="true"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etMonto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Tipo de movimiento -->
     <RadioGroup
         android:id="@+id/rgTipo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="32dp"
-        android:checkedButton="@id/rbIngreso">
+        android:layout_marginVertical="12dp">
 
         <RadioButton
             android:id="@+id/rbIngreso"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Ingreso"
-            android:layout_marginEnd="24dp" />
+            android:checked="true" />
 
         <RadioButton
             android:id="@+id/rbGasto"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Gasto" />
     </RadioGroup>
 
-    <Button
+    <!-- Barra de progreso -->
+    <ProgressBar
+        android:id="@+id/pbCargaFormulario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginVertical="10dp" />
+
+    <!-- Botón Guardar / Actualizar -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnGuardar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Guardar en Bolsillo"
-        android:backgroundTint="#3182CE"
-        android:textColor="#FFFFFF" />
+        android:text="GUARDAR MOVIMIENTO"
+        android:padding="12dp" />
+
+    <!-- Botón Eliminar (solo visible al editar) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnEliminar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ELIMINAR MOVIMIENTO"
+        android:visibility="gone"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:layout_marginTop="8dp"
+        android:padding="12dp" />
 
 </LinearLayout>

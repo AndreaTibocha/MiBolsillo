@@ -1,63 +1,85 @@
 package com.example.mibolsillo.historial;
 
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.example.mibolsillo.AdminSQLiteHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.mibolsillo.Movimiento;
-import com.example.mibolsillo.databinding.ActivityMainBinding;
-import com.example.mibolsillo.databinding.ItemMovimientoBinding;
+import com.example.mibolsillo.R;
 import com.example.mibolsillo.registro.FormularioActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
-    private AdminSQLiteHelper dbHelper;
-    private MovimientoAdapter adapter;
-    private ArrayList<Movimiento> listaMovimientos;
+    private RecyclerView rvHistorial;
+    private FloatingActionButton fabAgregar;
+    private MovimientoAdapter adaptador;
+    private List<Movimiento> listaMovimientos;
+
+    private FirebaseFirestore db;
+    private ListenerRegistration listenerFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_main);
 
-        dbHelper = new AdminSQLiteHelper(this);
-        listaMovimientos = dbHelper.obtenerHistorial();
+        rvHistorial = findViewById(R.id.rvHistorial);
+        fabAgregar = findViewById(R.id.fabAgregar);
 
-        // Configuración básica del listado
-        binding.rvHistorial.setLayoutManager(new LinearLayoutManager(this));
+        rvHistorial.setLayoutManager(new LinearLayoutManager(this));
+        listaMovimientos = new ArrayList<>();
+        adaptador = new MovimientoAdapter(listaMovimientos);
+        rvHistorial.setAdapter(adaptador);
 
-        adapter = new MovimientoAdapter(listaMovimientos, movimiento -> {
-            // Clic en una tarjeta para editarla
-            Intent intent = new Intent(MainActivity.this, FormularioActivity.class);
-            intent.putExtra("id", movimiento.getId());
-            intent.putExtra("descripcion", movimiento.getDescripcion());
-            intent.putExtra("valor", movimiento.getValor());
-            intent.putExtra("tipo", movimiento.getTipo());
-            startActivity(intent);
-        });
+        db = FirebaseFirestore.getInstance();
 
-        binding.rvHistorial.setAdapter(adapter);
-
-        // Clic en el botón flotante para crear uno nuevo
-        binding.fabAgregar.setOnClickListener(v -> {
+        fabAgregar.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, FormularioActivity.class);
             startActivity(intent);
         });
+
+        escucharMovimientosEnTiempoReal();
+    }
+
+    private void escucharMovimientosEnTiempoReal() {
+        listenerFirestore = db.collection("movimientos")
+                .addSnapshotListener((snapshots, error) -> {
+                    if (error != null) {
+                        Toast.makeText(MainActivity.this, "Error en tiempo real: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (snapshots != null) {
+                        listaMovimientos.clear();
+
+                        for (QueryDocumentSnapshot doc : snapshots) {
+                            Movimiento mov = doc.toObject(Movimiento.class);
+                            mov.setId(doc.getId());
+                            listaMovimientos.add(mov);
+                        }
+
+                        adaptador.notifyDataSetChanged();
+                    }
+                });
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        // ERROR INTENCIONADO: Se vuelven a leer los datos, pero NUNCA se notifica al adaptador.
-        // La lista se quedará congelada visualmente en pantalla tras registrar o editar algo.
-        if (dbHelper != null) {
-            listaMovimientos.clear();
-            listaMovimientos.addAll(dbHelper.obtenerHistorial());
-            // Aquí falta: adapter.notifyDataSetChanged();
+    protected void onDestroy() {
+        super.onDestroy();
+        if (listenerFirestore != null) {
+            listenerFirestore.remove();
         }
     }
 }

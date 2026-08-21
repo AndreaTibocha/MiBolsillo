@@ -1,54 +1,63 @@
-package com.example.mibolsillo.historial; // Ajusta si el paquete cambia
+package com.example.mibolsillo.historial;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.mibolsillo.Movimiento;
-import com.example.mibolsillo.databinding.ItemMovimientoBinding;
-import java.util.ArrayList;
+import com.example.mibolsillo.R;
+import com.example.mibolsillo.registro.FormularioActivity;
+
+import java.util.List;
 
 public class MovimientoAdapter extends RecyclerView.Adapter<MovimientoAdapter.MovimientoViewHolder> {
 
-    private ArrayList<Movimiento> listaMovimientos;
-    private OnItemClickListener listener;
+    private final List<Movimiento> listaMovimientos;
 
-    public interface OnItemClickListener {
-        void onItemClick(Movimiento movimiento);
-    }
-
-    public MovimientoAdapter(ArrayList<Movimiento> listaMovimientos, OnItemClickListener listener) {
+    public MovimientoAdapter(List<Movimiento> listaMovimientos) {
         this.listaMovimientos = listaMovimientos;
-        this.listener = listener;
     }
 
     @NonNull
     @Override
     public MovimientoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemMovimientoBinding binding = ItemMovimientoBinding.inflate(
-                LayoutInflater.from(parent.getContext()), parent, false);
-        return new MovimientoViewHolder(binding);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movimiento, parent, false);
+        return new MovimientoViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MovimientoViewHolder holder, int position) {
         Movimiento mov = listaMovimientos.get(position);
-        holder.binding.txtDescripcion.setText(mov.getDescripcion());
-        holder.binding.txtTipo.setText(mov.getTipo());
-        holder.binding.txtValor.setText("$" + mov.getValor());
 
-        // Lógica de colores pastel y flechas según el tipo
-        if (mov.getTipo().equalsIgnoreCase("Ingreso")) {
-            holder.binding.imgIndicador.setImageResource(android.R.drawable.arrow_up_float);
-            holder.binding.txtValor.setTextColor(Color.parseColor("#38A169")); // Verde
+        holder.tvTitulo.setText(mov.getTitulo());
+        holder.tvTipo.setText(mov.getTipo());
+        holder.tvMonto.setText("$ " + mov.getMonto());
+
+        if ("INGRESO".equalsIgnoreCase(mov.getTipo())) {
+            holder.tvMonto.setTextColor(Color.parseColor("#4CAF50"));
+            holder.ivIcono.setImageResource(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP ?
+                    android.R.drawable.arrow_up_float : android.R.drawable.ic_menu_compass);
         } else {
-            holder.binding.imgIndicador.setImageResource(android.R.drawable.arrow_down_float);
-            holder.binding.txtValor.setTextColor(Color.parseColor("#E53E3E")); // Rojo
+            holder.tvMonto.setTextColor(Color.parseColor("#F44336"));
+            holder.ivIcono.setImageResource(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP ?
+                    android.R.drawable.arrow_down_float : android.R.drawable.ic_menu_compass);
         }
 
-        holder.itemView.setOnClickListener(v -> listener.onItemClick(mov));
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), FormularioActivity.class);
+            intent.putExtra("id", mov.getId());
+            intent.putExtra("titulo", mov.getTitulo());
+            intent.putExtra("monto", mov.getMonto());
+            intent.putExtra("tipo", mov.getTipo());
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -57,10 +66,15 @@ public class MovimientoAdapter extends RecyclerView.Adapter<MovimientoAdapter.Mo
     }
 
     public static class MovimientoViewHolder extends RecyclerView.ViewHolder {
-        ItemMovimientoBinding binding;
-        public MovimientoViewHolder(@NonNull ItemMovimientoBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
+        TextView tvTitulo, tvTipo, tvMonto;
+        ImageView ivIcono;
+
+        public MovimientoViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvTitulo = itemView.findViewById(R.id.tvTituloMovimiento);
+            tvTipo = itemView.findViewById(R.id.tvTipoMovimiento);
+            tvMonto = itemView.findViewById(R.id.tvMontoMovimiento);
+            ivIcono = itemView.findViewById(R.id.ivIconoTipo);
         }
     }
 }
