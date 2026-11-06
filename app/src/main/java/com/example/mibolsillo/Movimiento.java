@@ -1,32 +1,55 @@
 package com.example.mibolsillo;
 
 public class Movimiento {
-    private String id; // ID del documento de Firestore (necesario para editar y borrar)
-    private String titulo;
+    private String id;
+    private String descripcion;
     private double monto;
     private String tipo; // "INGRESO" o "GASTO"
+    private double latitud;
+    private double longitud;
+    private String fotoPath;
+    private String fecha;
+    private String usuarioEmail;
 
-    // Constructor vacío obligatorio para que Firebase pueda mapear los datos
+    // Constructor vacío requerido por Cloud Firestore
     public Movimiento() {}
 
-    // Constructor completo
-    public Movimiento(String id, String titulo, double monto, String tipo) {
+    public Movimiento(String id, String descripcion, double monto, String tipo, double latitud, double longitud, String fotoPath, String fecha, String usuarioEmail) {
         this.id = id;
-        this.titulo = titulo;
+        this.descripcion = descripcion;
         this.monto = monto;
         this.tipo = tipo;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.fotoPath = fotoPath;
+        this.fecha = fecha;
+        this.usuarioEmail = usuarioEmail;
     }
 
-    // Getters y Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public String getTitulo() { return titulo; }
-    public void setTitulo(String titulo) { this.titulo = titulo; }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
     public double getMonto() { return monto; }
     public void setMonto(double monto) { this.monto = monto; }
 
     public String getTipo() { return tipo; }
     public void setTipo(String tipo) { this.tipo = tipo; }
+
+    public double getLatitud() { return latitud; }
+    public void setLatitud(double latitud) { this.latitud = latitud; }
+
+    public double getLongitud() { return longitud; }
+    public void setLongitud(double longitud) { this.longitud = longitud; }
+
+    public String getFotoPath() { return fotoPath; }
+    public void setFotoPath(String fotoPath) { this.fotoPath = fotoPath; }
+
+    public String getFecha() { return fecha; }
+    public void setFecha(String fecha) { this.fecha = fecha; }
+
+    public String getUsuarioEmail() { return usuarioEmail; }
+    public void setUsuarioEmail(String usuarioEmail) { this.usuarioEmail = usuarioEmail; }
 }

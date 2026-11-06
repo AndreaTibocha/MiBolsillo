@@ -36,7 +36,8 @@ public class MovimientoAdapter extends RecyclerView.Adapter<MovimientoAdapter.Mo
     public void onBindViewHolder(@NonNull MovimientoViewHolder holder, int position) {
         Movimiento mov = listaMovimientos.get(position);
 
-        holder.tvTitulo.setText(mov.getTitulo());
+        // CORRECCIÓN 1: Se usa getDescripcion()
+        holder.tvTitulo.setText(mov.getDescripcion());
         holder.tvTipo.setText(mov.getTipo());
         holder.tvMonto.setText("$ " + mov.getMonto());
 
@@ -53,7 +54,8 @@ public class MovimientoAdapter extends RecyclerView.Adapter<MovimientoAdapter.Mo
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), FormularioActivity.class);
             intent.putExtra("id", mov.getId());
-            intent.putExtra("titulo", mov.getTitulo());
+            // CORRECCIÓN 2: Se envía la descripción en el intent
+            intent.putExtra("descripcion", mov.getDescripcion());
             intent.putExtra("monto", mov.getMonto());
             intent.putExtra("tipo", mov.getTipo());
             v.getContext().startActivity(intent);
